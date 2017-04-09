@@ -8,16 +8,18 @@ public class Review
     private String name;
     private String message;
     private int rating;
+    private String date;
 
     public Review()
     {
     }
 
-    public Review(String name, String message, int rating)
+    public Review(String name, String message, int rating, String date)
     {
         this.name = name;
         this.message = message;
         this.rating = rating;
+        this.date = date;
     }
 
     public String getName() {
@@ -42,6 +44,14 @@ public class Review
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String toString()

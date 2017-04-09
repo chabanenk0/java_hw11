@@ -9,12 +9,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+
+import static java.lang.System.exit;
 
 public class MainServlet extends HttpServlet {
+    // put here the real credentials for your database.
+    // And create the database before:
+    // CREATE DATABASE java_guestbook DEFAULT CHARACTER SET utf8;
+    public static String DATABASE_NAME = "java_guestbook";
+    public static String DATABASE_LOGIN = "root";
+    public static String DATABASE_PASS = "111";
+
     private ReviewRepository reviewRepository;
 
     public MainServlet() {
-        this.reviewRepository = new ReviewRepository();
+        try {
+            this.reviewRepository = new ReviewRepository(
+                    MainServlet.DATABASE_NAME,
+                    MainServlet.DATABASE_LOGIN,
+                    MainServlet.DATABASE_PASS
+            );
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database! Check your credentials!");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -35,9 +54,15 @@ public class MainServlet extends HttpServlet {
         String message = request.getParameter("message");
         int rating = Integer.parseInt(request.getParameter("rating"));
 
-        Review review = new Review(name, message, rating);
+        Review review = new Review(name, message, rating, "");
 
-        PrintWriter writer = response.getWriter();
-        writer.print("review:" + review.toString());
+        try {
+            this.reviewRepository.insertReview(review);
+        } catch (SQLException e) {
+            response.sendError(500, "Error inserting your review. Please try again later...");
+            e.printStackTrace();
+        }
+
+        response.sendRedirect("/");
     }
 }

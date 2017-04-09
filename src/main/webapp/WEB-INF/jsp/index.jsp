@@ -36,6 +36,7 @@
                 <span class="name"><c:out value="${review.name}" /></span>
                 <span class="message"><c:out value="${review.name}" /></span>
                 <span class="rating">My rating: <c:out value="${review.rating}" /></span>
+                <span class="rating">Date: <c:out value="${review.date}" /></span>
             </div>
         </c:forEach>
 
